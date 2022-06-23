@@ -4,7 +4,9 @@ import './App.css';
 import { render } from '@testing-library/react';
 
 class App extends Component {
-  
+  constructor()={
+
+  }
 render(){
   return (
     <div className="App">
