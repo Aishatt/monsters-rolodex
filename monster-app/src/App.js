@@ -6,47 +6,62 @@ import { render } from '@testing-library/react';
 class App extends Component {
   constructor() {
     super();
-
+    //Monsters rolodex is a tool that shows you a bunch of diff users
     this.state = {
-      monsters: [
-        {
-          name: 'Thanos',
-          id: '23e456ty'
-        },
-        {
-          name: 'Lucifer',
-          id: '23l856ty'
-        },
-        {
-          name: 'Franklith',
-          id: '45e456ty'
-        },
-        {
-          name: 'crix',
-          id: '23e46hly'
-        }
-      ]
+      monsters: [], //initialize our array as empty
     };
   }
+  //when to make API request to get our info,o the mthd nly happens once
+  componentDidMount() {
+    //fetch from api
+    fetch('http://jsonplaceholder.typicode.com/users')
+      .then((response) => response.json())
+      .then((users) => this.setState(() => {
+        return { monsters: users }
+      },
+        () => {
+          console.log(this.state);
+        }
+      ));
+  }
+  //render our app function
   render() {
+   
+    const filtered = this.state.monsters.filter((monster) => {
+      //return user name if it includes the typed letters
+      return monster.name.toLocaleLowerCase().includes(this.state.searchField);
+    });
+
     return (
       <div className="App">
-        <header className="App-header">
+        <input
+          className='search-box'
+          placeholder='search-monster'
+          onChange={ //anonnymous function
+            (event) => {
+            const searchField = event.target.value.toLocaleLowerCase();
+            this.setState(() => {
+              return { searchField };
+            });
+          }}
+        />
 
-          {
-            this.state.monsters.map((monster) => {
-              return(
-                 <div key={monster.id}>
-                 <h1 >{monster.name}</h1> 
-              </div>
+        {
+          //.map method allows you to iterate over every single element
+          //inside of the array from left to right
+          
+            filtered.map((monster) => {
+              return (
+                <div key={monster.id}>
+                  <h1 > {monster.name}  </h1>
+                </div>
               );
-              })
+            })
             //console.log(state.monster1)
           }
-
-        </header>
       </div>
     );
+
   }
 }
 export default App;
